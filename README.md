@@ -1,3 +1,14 @@
+# Raspberry Pi Zero W (Installation)
+
+This Repo builds on the good work of (Austin Brown - Go check out his stuff!)[https://github.com/luxdvie?tab=repositories], and is focused on simplifying the process for a Raspberry Pi Zero W.
+
+1. Install 'Raspberry Pi OS Lite (32-Bit) using Pi Imager. Enter your hostname, enable SSH, set your credentials and configure your WIFi and your Locale settings, under the gear icon.
+2. Boot the Pi and wait for it to join the netowrk.
+3. Connect using SSH
+4. Run the ws8212-zerow.bash file to install
+
+
+
 # WS2812 LED Strip Animations
 
 A **very** basic app to control WS2812 LED strips with a Raspberry Pi.
