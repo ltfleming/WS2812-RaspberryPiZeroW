@@ -16,9 +16,37 @@ npm i -g node-gyp
 
 # Download controller code from GIT
 sudo apt install git
-git clone https://github.com/luxdvie/WS2812Controller.git
-cd WS2812Controller
-npm install --python=pypy
+git clone https://github.com/ltfleming/WS2812-RaspberryPiZeroW.git
+
+mkdir /home/pi/share
+mv WS2812-RaspberryPiZeroW/ /home/pi/share/LightController
+
+# Set up Share
+sudo apt-get install samba -y
+sudo apt-get install samba-common-bin -y
+sudo cp -p /etc/samba/smb.conf /etc/samba/smb.conf.original
+
+sudo -s
+
+echo '[PiShare]
+comment=Raspberry Pi Share Directory
+path=/home/pi/share
+browseable=yes
+guest ok=yes
+read only=no
+create mask=0777
+force create mode=0777
+directory mask=0777
+force directory mode=02777
+force user=pi' >> /etc/samba/smb.conf
+ 
+exit
+
+sudo service smbd stop
+sudo service smbd start
+
 
 # Run code
+cd /home/pi/share/LightController
+npm install --python=pypy
 sudo node app.js

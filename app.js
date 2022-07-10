@@ -25,6 +25,7 @@ var HTTP_PORT = 8080;
 var strip = require("./strip.js");
 
 /*  Animation Libraries */
+var bookcase = require("./animations/bookcase.js");
 var xmas = require("./animations/xmas.js");
 var fade = require("./animations/fade.js");
 var rainbow = require("./animations/rainbow.js");
@@ -124,6 +125,9 @@ app.get("/admin/poweroff", function (req, res) {
 function GetLibraryInstance(key) {
 	var lib = null;
 	switch (key) {
+		case "bookcase":
+			lib = bookcase;
+			break;
 		case "xmas":
 			lib = xmas;
 			break;
