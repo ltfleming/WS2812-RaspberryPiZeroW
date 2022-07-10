@@ -5,12 +5,14 @@ var common = require("./common.js");
 
 function bookcase() {
   var name = "bookcase.js";
-  var speed = 20;
+  var speed = 1000 / 10;
   var tickNumber = 0;
+  var maxTickNumber = 10;
 
   getPatternByIndex = function (index) {
     var centers = [10, 31, 52];
-    if (index == 0) centers;
+
+    if (index == 0) return centers;
 
     return [
       centers[0] - index,
@@ -35,7 +37,7 @@ function bookcase() {
       strip.Lights[i] = rgb2Int(0, 0, 0);
     }
 
-    if (tickNumber > 10) {
+    if (tickNumber > maxTickNumber) {
       tickNumber = 0;
     }
 

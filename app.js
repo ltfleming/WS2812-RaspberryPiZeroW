@@ -12,7 +12,7 @@ var express = require("express");
 var app = express();
 var bodyParser = require("body-parser");
 var path = require("path");
-var os = require('os');
+var os = require("os");
 
 app.use(express.static(__dirname + "/public"));
 app.use(bodyParser.json());
@@ -41,13 +41,13 @@ var twinkle = require("./animations/twinkle.js");
 var interfaces = os.networkInterfaces();
 var localAddress = "";
 for (var k in interfaces) {
-    for (var k2 in interfaces[k]) {
-        var address = interfaces[k][k2];
-        if (address.family === 'IPv4' && !address.internal) {
-			localAddress = address.address;
-			break;
-        }
+  for (var k2 in interfaces[k]) {
+    var address = interfaces[k][k2];
+    if (address.family === "IPv4" && !address.internal) {
+      localAddress = address.address;
+      break;
     }
+  }
 }
 
 /*****************
@@ -62,39 +62,39 @@ for (var k in interfaces) {
  * 		args => object containing any arguments you want to pass to the animation method
  */
 app.post("/AnimationRequest", function (request, response) {
-	response.header("Access-Control-Allow-Origin", "*");
+  response.header("Access-Control-Allow-Origin", "*");
 
-	var lib = request.body.hasOwnProperty("lib") ? request.body.lib : "";
-	var instance = GetLibraryInstance(lib);
-	if (instance === null || typeof instance === "undefined") {
-		response.send("Library not found.");
-		return;
-	}
+  var lib = request.body.hasOwnProperty("lib") ? request.body.lib : "";
+  var instance = GetLibraryInstance(lib);
+  if (instance === null || typeof instance === "undefined") {
+    response.send("Library not found.");
+    return;
+  }
 
-	var method = request.body.hasOwnProperty("method")
-		? request.body.method
-		: null;
-	if (method === null) {
-		response.send("Method not found.");
-		return;
-	}
+  var method = request.body.hasOwnProperty("method")
+    ? request.body.method
+    : null;
+  if (method === null) {
+    response.send("Method not found.");
+    return;
+  }
 
-	var args = request.body.hasOwnProperty("args") ? request.body.args : "";
+  var args = request.body.hasOwnProperty("args") ? request.body.args : "";
 
-	if (typeof instance[method] === "function") {
-		var rsp = instance[method](args, strip);
-		response.send(rsp);
-	} else {
-		response.send("Function not found");
-	}
+  if (typeof instance[method] === "function") {
+    var rsp = instance[method](args, strip);
+    response.send(rsp);
+  } else {
+    response.send("Function not found");
+  }
 });
 
 /**
  * Home
  */
 app.get("/", function (req, res) {
-	res.header("Access-Control-Allow-Origin", "*");
-	res.sendFile(path.join(__dirname + "/app.html"));
+  res.header("Access-Control-Allow-Origin", "*");
+  res.sendFile(path.join(__dirname + "/app.html"));
 });
 
 /*****************
@@ -102,17 +102,20 @@ app.get("/", function (req, res) {
 *****************/
 
 app.get("/admin/reboot", function (req, res) {
-	res.header("Access-Control-Allow-Origin", "*");
-	res.send("Issuing shutdown command.");
-	require('child_process').exec('sudo reboot', function (msg) { console.log("Issuing reboot command.") });
+  res.header("Access-Control-Allow-Origin", "*");
+  res.send("Issuing shutdown command.");
+  require("child_process").exec("sudo reboot", function (msg) {
+    console.log("Issuing reboot command.");
+  });
 });
 
 app.get("/admin/poweroff", function (req, res) {
-	res.header("Access-Control-Allow-Origin", "*");
-	res.send("Issuing shutdown command.");
-	require('child_process').exec('sudo poweroff', function (msg) { console.log("Issuing shutdown command.") });
+  res.header("Access-Control-Allow-Origin", "*");
+  res.send("Issuing shutdown command.");
+  require("child_process").exec("sudo poweroff", function (msg) {
+    console.log("Issuing shutdown command.");
+  });
 });
-
 
 /*****************
 	Common
@@ -123,32 +126,32 @@ app.get("/admin/poweroff", function (req, res) {
  * @param {string} key The name of the library to find
  */
 function GetLibraryInstance(key) {
-	var lib = null;
-	switch (key) {
-		case "bookcase":
-			lib = bookcase;
-			break;
-		case "xmas":
-			lib = xmas;
-			break;
-		case "fade":
-			lib = fade;
-			break;
-		case "rainbow":
-			lib = rainbow;
-			break;
-		case "control":
-			lib = control;
-			break;
-		case "dance":
-			lib = dance;
-			break;
-		case "twinkle":
-			lib = twinkle;
-			break;
-	}
+  var lib = null;
+  switch (key) {
+    case "bookcase":
+      lib = bookcase;
+      break;
+    case "xmas":
+      lib = xmas;
+      break;
+    case "fade":
+      lib = fade;
+      break;
+    case "rainbow":
+      lib = rainbow;
+      break;
+    case "control":
+      lib = control;
+      break;
+    case "dance":
+      lib = dance;
+      break;
+    case "twinkle":
+      lib = twinkle;
+      break;
+  }
 
-	return lib;
+  return lib;
 }
 
 /*****************
@@ -156,15 +159,17 @@ function GetLibraryInstance(key) {
 *****************/
 
 var server = app.listen(HTTP_PORT, function () {
-	console.log("***************************");
-	console.log(" WS2812 CONTROLLER STARTUP ");
-	console.log(" Web Server listening at the location below, or by host name and port. ");
-	console.log(" http://" + localAddress + ":" + HTTP_PORT);
-	console.log("***************************");
+  console.log("***************************");
+  console.log(" WS2812 CONTROLLER STARTUP ");
+  console.log(
+    " Web Server listening at the location below, or by host name and port. "
+  );
+  console.log(" http://" + localAddress + ":" + HTTP_PORT);
+  console.log("***************************");
 
-	// Run the 'Rainbow' routing on startup
-	var rainbowInstance = GetLibraryInstance("rainbow");
-	if (rainbowInstance) {
-        	rainbowInstance.GoRainbow("", strip);
-	}
+  // Run the 'Rainbow' routing on startup
+  var animation = GetLibraryInstance("bookcase");
+  if (animation) {
+    animation.TurnOn("", strip);
+  }
 });
